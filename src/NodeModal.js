@@ -31,7 +31,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
-            <FormLabel>Name</FormLabel>
+            <FormLabel>Parent Name</FormLabel>
             <Input
               value={selectedNode && selectedNode.name}
               onChange={(event) => {
@@ -41,6 +41,20 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
                 });
               }}
             />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Parent Gender</FormLabel>
+            <Select
+              placeholder="Select gender"
+              value={selectedNode && selectedNode.gender}
+              disabled={selectedNode && !selectedNode.name}
+              onChange={({ target }) =>
+                setSelectedNode({ ...selectedNode, gender: target.value })
+              }
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </Select>
           </FormControl>
           <FormControl>
             <FormLabel>Child Name</FormLabel>

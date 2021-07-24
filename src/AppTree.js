@@ -59,7 +59,7 @@ const AppTree = ({ readOnly = true }) => {
       <g>
         <circle
           r="15"
-          fill={nodeDatum.gender === "male" ? "#00ff00" : "#ff0000"}
+          fill={nodeDatum.gender === "male" ? "#00ff00" : "#0000ff"}
           onClick={readOnly ? toggleNode : () => onNodeClick(nodeDatum)}
         />
         <text fill="black" strokeWidth="1" x="20">
