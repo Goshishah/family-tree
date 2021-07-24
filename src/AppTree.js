@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Tree from "react-d3-tree";
 import { v4 } from "uuid";
 import NodeModal from "./NodeModal";
@@ -15,28 +15,40 @@ const AppTree = ({ readOnly = true }) => {
     attributes: {
       id: "411d9783-85ba-41e5-a6a3-5e1cca3d294f",
     },
-    children: [
-      {
-        name: "Root 1.1",
-        attributes: {
-          id: "411d9783-85ba-41e5-a6a3-5e1cca3d294f2",
-        },
-        children: [],
-      },
-      {
-        name: "Root 1.2",
-        attributes: {
-          id: "411d9783-85ba-41e5-a6a3-5e1cca3d294f3",
-        },
-        children: [],
-      },
-    ],
+    children: [],
   });
+
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
   const handleClose = () => setNode(undefined);
   const handleNodeClick = (datum) => {
     setNode(datum);
+  };
+
+  useEffect(() => {
+    getDataFile("/data/data.json").then((tree) => {
+      setTree(tree);
+    });
+  }, []);
+
+  const getDataFile = (filePath) => {
+    if (filePath) {
+      return fetch(filePath).then((response) => {
+        return response.json();
+      });
+    }
+  };
+
+  const downloadFile = async () => {
+    const json = JSON.stringify(tree);
+    const blob = new Blob([json], { type: "application/json" });
+    const href = await URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = href;
+    link.download = "data.json";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   // Here we're using `renderCustomNodeElement` to represent each node
@@ -97,9 +109,7 @@ const AppTree = ({ readOnly = true }) => {
       const curNode = queue.pop();
       if (curNode.attributes?.id === id) {
         curNode.name = node.name;
-        curNode.children = node.children
-          ? [...curNode.children, ...node.children]
-          : curNode.children;
+        curNode.children = node.children ? node.children : curNode.children;
         return { ...tree };
       }
 
@@ -112,6 +122,11 @@ const AppTree = ({ readOnly = true }) => {
 
   return (
     <div style={containerStyles} ref={containerRef}>
+      {!readOnly && (
+        <button type="button" onClick={downloadFile}>
+          {`Download Json`}
+        </button>
+      )}
       <Tree
         data={tree}
         // orientation="vertical"
