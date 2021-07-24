@@ -9,15 +9,19 @@ import {
   ModalOverlay,
 } from "@chakra-ui/modal";
 import { Button } from "@chakra-ui/button";
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 
-const NodeModal = ({ isOpen, node, onClose, onSubmit }) => {
+const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
   const [selectedNode, setSelectedNode] = useState(undefined);
-  const [child, setChild] = useState("");
+  const [child, setChild] = useState({ name: "" });
 
   useEffect(() => {
     setSelectedNode(node);
   }, [node]);
+
+  const handleGenderChange = ({ target }) => {
+    setChild({ ...child, gender: target.value });
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -41,18 +45,42 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit }) => {
           <FormControl>
             <FormLabel>Child Name</FormLabel>
             <Input
-              value={child}
-              onChange={(event) => setChild(event.target.value)}
+              value={child.name}
+              onChange={(event) =>
+                setChild({ ...child, name: event.target.value })
+              }
             />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Child Gender</FormLabel>
+            <Select
+              placeholder="Select gender"
+              disabled={!child.name}
+              onChange={handleGenderChange}
+            >
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </Select>
           </FormControl>
         </ModalBody>
         <ModalFooter>
+          <Button
+            color="red.500"
+            mr={3}
+            variant="solid"
+            onClick={() => {
+              onDelete(selectedNode);
+            }}
+            disabled={!selectedNode}
+          >
+            Delete
+          </Button>
           <Button
             color="blue.500"
             variant="solid"
             onClick={() => {
               onSubmit(selectedNode, child);
-              setChild("");
+              setChild({ name: "" });
             }}
             disabled={!selectedNode}
           >

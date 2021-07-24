@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Tree from "react-d3-tree";
-import { v4 } from "uuid";
 import NodeModal from "./NodeModal";
 import { useCenteredTree } from "./helpers";
+import { deleteTreeApi, getTreeApi, postTreeApi } from "./treeService";
+import { FormControl, Select, Button } from "@chakra-ui/react";
 
 const containerStyles = {
   width: "100vw",
@@ -12,6 +13,7 @@ const containerStyles = {
 const AppTree = ({ readOnly = true }) => {
   const [tree, setTree] = useState({
     name: "Root",
+    gender: "male",
     attributes: {
       id: "411d9783-85ba-41e5-a6a3-5e1cca3d294f",
     },
@@ -20,24 +22,21 @@ const AppTree = ({ readOnly = true }) => {
 
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
+  const [orientation, setOrientation] = useState("horizontal");
+
   const handleClose = () => setNode(undefined);
   const handleNodeClick = (datum) => {
     setNode(datum);
   };
 
   useEffect(() => {
-    getDataFile("/data/data.json").then((tree) => {
-      setTree(tree);
+    getTreeApi().then((response) => {
+      const { success, data } = response;
+      if (success) {
+        setTree(data);
+      }
     });
   }, []);
-
-  const getDataFile = (filePath) => {
-    if (filePath) {
-      return fetch(filePath).then((response) => {
-        return response.json();
-      });
-    }
-  };
 
   const downloadFile = async () => {
     const json = JSON.stringify(tree);
@@ -60,7 +59,7 @@ const AppTree = ({ readOnly = true }) => {
       <g>
         <circle
           r="15"
-          fill={"#777"}
+          fill={nodeDatum.gender === "male" ? "#00ff00" : "#ff0000"}
           onClick={readOnly ? toggleNode : () => onNodeClick(nodeDatum)}
         />
         <text fill="black" strokeWidth="1" x="20">
@@ -76,60 +75,46 @@ const AppTree = ({ readOnly = true }) => {
   };
 
   const handleSubmit = (node, child) => {
-    const newTree = bfs(node.attributes?.id, tree, {
-      name: node.name,
-      attributes: {
-        id: v4(),
-      },
-      children: child
-        ? [
-            ...node.children,
-            {
-              name: child,
-              attributes: {
-                id: v4(),
-              },
-              children: [],
-            },
-          ]
-        : [],
+    postTreeApi({ node, child }).then((response) => {
+      const { success, data } = response;
+      if (success) {
+        setTree(data);
+      }
     });
-
-    if (newTree) {
-      setTree(newTree);
-    }
-
     setNode(undefined);
   };
 
-  function bfs(id, tree, node) {
-    const queue = [];
-    queue.unshift(tree);
-    while (queue.length > 0) {
-      const curNode = queue.pop();
-      if (curNode.attributes?.id === id) {
-        curNode.name = node.name;
-        curNode.children = node.children ? node.children : curNode.children;
-        return { ...tree };
+  const handleDelete = (node) => {
+    deleteTreeApi({ node }).then((response) => {
+      const { success, data } = response;
+      if (success) {
+        setTree(data);
+        setNode(undefined);
+      } else {
+        setNode(undefined);
       }
-
-      const len = curNode.children.length;
-      for (let i = 0; i < len; i++) {
-        queue.unshift(curNode.children[i]);
-      }
-    }
-  }
+    });
+  };
 
   return (
     <div style={containerStyles} ref={containerRef}>
-      {!readOnly && (
-        <button type="button" onClick={downloadFile}>
-          {`Download Json`}
-        </button>
-      )}
+      <FormControl>
+        {!readOnly && (
+          <Button color="blue.500" variant="solid" onClick={downloadFile}>
+            Download Json
+          </Button>
+        )}
+        <Select
+          placeholder="Select orientation"
+          onChange={({ target }) => setOrientation(target.value)}
+        >
+          <option value="vertical">Vertical</option>
+          <option value="horizontal">Horizontal</option>
+        </Select>
+      </FormControl>
       <Tree
         data={tree}
-        // orientation="vertical"
+        orientation={orientation}
         translate={translate}
         renderCustomNodeElement={(nodeInfo) =>
           renderRectSvgNode(nodeInfo, handleNodeClick)
@@ -139,6 +124,7 @@ const AppTree = ({ readOnly = true }) => {
       {!readOnly && (
         <NodeModal
           onSubmit={handleSubmit}
+          onDelete={handleDelete}
           onClose={handleClose}
           node={node}
           isOpen={!!node}
