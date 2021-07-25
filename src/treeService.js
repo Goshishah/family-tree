@@ -12,7 +12,7 @@ export const getTreeApi = () => {
 };
 
 export const postTreeApi = (params) => {
-  return fetch(getApiUrl("/post-tree"), {
+  return fetch(getApiUrl("post-tree"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -23,7 +23,7 @@ export const postTreeApi = (params) => {
 };
 
 export const deleteTreeApi = (params) => {
-  return fetch(getApiUrl("/delete-node"), {
+  return fetch(getApiUrl("delete-node"), {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
