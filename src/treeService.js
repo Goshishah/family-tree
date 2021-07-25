@@ -1,5 +1,8 @@
+const getApiUrl = (endpoint) =>
+  `https://syed-family-tree-backend.herokuapp.com/api/${endpoint}`;
+
 export const getTreeApi = () => {
-  return fetch(`/get-tree`, {
+  return fetch(getApiUrl("get-tree"), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -9,7 +12,7 @@ export const getTreeApi = () => {
 };
 
 export const postTreeApi = (params) => {
-  return fetch(`/post-tree`, {
+  return fetch(getApiUrl("/post-tree"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,7 +23,7 @@ export const postTreeApi = (params) => {
 };
 
 export const deleteTreeApi = (params) => {
-  return fetch(`/delete-node`, {
+  return fetch(getApiUrl("/delete-node"), {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
