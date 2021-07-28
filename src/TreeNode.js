@@ -28,7 +28,7 @@ const TreeNode = (props) => {
         ></path>
         <path
           fill="#000"
-          stroke="#fff"
+          stroke={nodeDatum.children.length > 0 ? "#e3b306" : "#fff"}
           strokeDasharray="4.9310344,4.9310344"
           strokeLinejoin="round"
           strokeWidth="4.931"
@@ -36,7 +36,7 @@ const TreeNode = (props) => {
         ></path>
         <path
           fill="#000"
-          stroke="#fff"
+          stroke={nodeDatum.children.length > 0 ? "#e3b306" : "#fff"}
           strokeLinejoin="round"
           strokeWidth="2.178"
           d="M88.122 48.52c0 20.19-16.868 36.556-37.676 36.556S12.77 68.71 12.77 48.52s16.868-36.555 37.676-36.555S88.122 28.33 88.122 48.52z"
