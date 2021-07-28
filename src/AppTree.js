@@ -4,6 +4,7 @@ import NodeModal from "./NodeModal";
 import { useCenteredTree } from "./helpers";
 import { deleteTreeApi, getTreeApi, postTreeApi } from "./treeService";
 import { FormControl, Select, Button } from "@chakra-ui/react";
+import TreeNode from "./TreeNode";
 
 const containerStyles = {
   width: "100vw",
@@ -22,7 +23,7 @@ const AppTree = ({ readOnly = true }) => {
 
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
-  const [orientation, setOrientation] = useState("horizontal");
+  const [orientation, setOrientation] = useState("vertical");
 
   const handleClose = () => setNode(undefined);
   const handleNodeClick = (datum) => {
@@ -53,24 +54,12 @@ const AppTree = ({ readOnly = true }) => {
   // Here we're using `renderCustomNodeElement` to represent each node
   // as an SVG `rect` instead of the default `circle`.
   const renderRectSvgNode = (customProps, onNodeClick) => {
-    const { nodeDatum, toggleNode } = customProps;
-
     return (
-      <g>
-        <circle
-          r="15"
-          fill={nodeDatum.gender === "male" ? "#00ff00" : "#0000ff"}
-          onClick={readOnly ? toggleNode : () => onNodeClick(nodeDatum)}
-        />
-        <text fill="black" strokeWidth="1" x="20">
-          {nodeDatum.name}
-        </text>
-        {nodeDatum.attributes?.department && (
-          <text fill="black" x="20" dy="20" strokeWidth="1">
-            Department: {nodeDatum.attributes?.department}
-          </text>
-        )}
-      </g>
+      <TreeNode
+        readOnly={readOnly}
+        onNodeClick={onNodeClick}
+        {...customProps}
+      />
     );
   };
 
@@ -104,18 +93,38 @@ const AppTree = ({ readOnly = true }) => {
             Download Json
           </Button>
         )}
-        <Select
+        {/* <Select
           placeholder="Select orientation"
           onChange={({ target }) => setOrientation(target.value)}
         >
           <option value="vertical">Vertical</option>
           <option value="horizontal">Horizontal</option>
-        </Select>
+        </Select> */}
       </FormControl>
       <Tree
         data={tree}
         orientation={orientation}
         translate={translate}
+        pathFunc={(linkData, orientation) => {
+          const { source, target } = linkData;
+          const sX = source.x + 50;
+          const sY = source.y + 90;
+          const tX = target.x + 50;
+          const tY = target.y + 90;
+
+          if (Math.abs(sX - tX) > Math.abs(sY - tY)) {
+            const midX = (tX + sX) / 2;
+            return `M ${sX},${sY} C ${midX},${sY} ${midX},${tY} ${tX},${tY}`;
+          } else {
+            const midY = (tY + sY) / 2;
+            return `M ${sX},${sY} C ${sX},${midY} ${tX},${midY} ${tX},${tY}`;
+          }
+        }}
+        scaleExtent={{ min: 1, max: 10 }}
+        nodeSize={{
+          x: 150,
+          y: 300,
+        }}
         renderCustomNodeElement={(nodeInfo) =>
           renderRectSvgNode(nodeInfo, handleNodeClick)
         }
