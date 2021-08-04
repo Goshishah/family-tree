@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/modal";
 import { Button } from "@chakra-ui/button";
 import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
+import languages from "./data/languages.json";
 
 const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
   const [selectedNode, setSelectedNode] = useState(undefined);
@@ -23,6 +24,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
     setChild({ ...child, gender: target.value });
   };
 
+  console.log("selected node...........", selectedNode);
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -31,9 +33,37 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
+            <FormLabel>Select Parent language</FormLabel>
+            <Select
+              variant="outline"
+              value={
+                selectedNode && selectedNode.languageCode
+                  ? selectedNode.languageCode
+                  : ""
+              }
+              placeholder="Select your lanaguage"
+              onChange={({ target }) => {
+                setSelectedNode({
+                  ...selectedNode,
+                  languageCode: target.value,
+                });
+              }}
+            >
+              {languages.map((lang) => (
+                <option value={lang.code}>{lang.name}</option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
             <FormLabel>Parent Name</FormLabel>
             <Input
-              value={selectedNode && selectedNode.name}
+              value={
+                selectedNode &&
+                selectedNode.languages &&
+                selectedNode.languages[selectedNode.languageCode]
+                  ? selectedNode.languages[selectedNode.languageCode].name
+                  : ""
+              }
               onChange={(event) => {
                 setSelectedNode({
                   ...selectedNode,
@@ -54,6 +84,21 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
             >
               <option value="male">Male</option>
               <option value="female">Female</option>
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>Select Child language</FormLabel>
+            <Select
+              variant="outline"
+              value={child && child.languageCode ? child.languageCode : ""}
+              placeholder="Select your lanaguage"
+              onChange={({ target }) => {
+                setChild({ ...child, languageCode: target.value });
+              }}
+            >
+              {languages.map((lang) => (
+                <option value={lang.code}>{lang.name}</option>
+              ))}
             </Select>
           </FormControl>
           <FormControl>

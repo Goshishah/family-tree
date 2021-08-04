@@ -1,7 +1,14 @@
 import React from "react";
 
 const TreeNode = (props) => {
-  const { nodeDatum, toggleNode, readOnly, onNodeClick } = props;
+  const { nodeDatum, toggleNode, readOnly, selectedLang, onNodeClick } = props;
+
+  const getName = () => {
+    return nodeDatum.languages[selectedLang]
+      ? nodeDatum.languages[selectedLang].name
+      : "N/A";
+  };
+
   return (
     <g onClick={readOnly ? toggleNode : () => onNodeClick(nodeDatum)}>
       <g r="15">
@@ -64,7 +71,8 @@ const TreeNode = (props) => {
         transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
         xmlSpace="preserve"
       >
-        {nodeDatum.name}
+        {/* {nodeDatum.name} */}
+        {getName()}
       </text>
     </g>
   );

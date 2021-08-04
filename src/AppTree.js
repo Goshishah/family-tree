@@ -5,6 +5,7 @@ import { useCenteredTree } from "./helpers";
 import { deleteTreeApi, getTreeApi, postTreeApi } from "./treeService";
 import { FormControl, Select, Button } from "@chakra-ui/react";
 import TreeNode from "./TreeNode";
+import languages from "./data/languages.json";
 
 const containerStyles = {
   width: "100vw",
@@ -13,13 +14,18 @@ const containerStyles = {
 
 const AppTree = ({ readOnly = true }) => {
   const [tree, setTree] = useState({
-    name: "Root",
+    languages: {
+      ar: { name: "مُحَمَّد" },
+      ur: { name: "محمد" },
+      en: { name: "Muhammad" },
+    },
     gender: "male",
     attributes: {
       id: "411d9783-85ba-41e5-a6a3-5e1cca3d294f",
     },
     children: [],
   });
+  const [selectedLang, setSelectedLang] = useState("en");
 
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
@@ -53,13 +59,17 @@ const AppTree = ({ readOnly = true }) => {
 
   // Here we're using `renderCustomNodeElement` to represent each node
   // as an SVG `rect` instead of the default `circle`.
-  const renderRectSvgNode = (customProps, onNodeClick) => {
+  const renderRectSvgNode = (customProps, selectedLang, onNodeClick) => {
     return (
-      <TreeNode
-        readOnly={readOnly}
-        onNodeClick={onNodeClick}
-        {...customProps}
-      />
+      <>
+        {/* <Flag /> */}
+        <TreeNode
+          readOnly={readOnly}
+          onNodeClick={onNodeClick}
+          selectedLang={selectedLang}
+          {...customProps}
+        />
+      </>
     );
   };
 
@@ -85,6 +95,22 @@ const AppTree = ({ readOnly = true }) => {
     });
   };
 
+  const handlePath = (linkData, orientation) => {
+    const { source, target } = linkData;
+    const sX = source.x + 50;
+    const sY = source.y + 90;
+    const tX = target.x + 50;
+    const tY = target.y + 90;
+
+    if (Math.abs(sX - tX) > Math.abs(sY - tY)) {
+      const midX = (tX + sX) / 2;
+      return `M ${sX},${sY} C ${midX},${sY} ${midX},${tY} ${tX},${tY}`;
+    } else {
+      const midY = (tY + sY) / 2;
+      return `M ${sX},${sY} C ${sX},${midY} ${tX},${midY} ${tX},${tY}`;
+    }
+  };
+
   return (
     <div style={containerStyles} ref={containerRef}>
       <FormControl>
@@ -93,50 +119,40 @@ const AppTree = ({ readOnly = true }) => {
             Download Json
           </Button>
         )}
-        {/* <Select
-          placeholder="Select orientation"
-          onChange={({ target }) => setOrientation(target.value)}
+        <Select
+          variant="outline"
+          placeholder="Select your lanaguage"
+          onChange={({ target }) => {
+            setSelectedLang(target.value);
+          }}
         >
-          <option value="vertical">Vertical</option>
-          <option value="horizontal">Horizontal</option>
-        </Select> */}
+          {languages.map((lang) => (
+            <option value={lang.code}>{lang.name}</option>
+          ))}
+        </Select>
       </FormControl>
       <Tree
         data={tree}
         orientation={orientation}
         translate={translate}
-        pathFunc={(linkData, orientation) => {
-          const { source, target } = linkData;
-          const sX = source.x + 50;
-          const sY = source.y + 90;
-          const tX = target.x + 50;
-          const tY = target.y + 90;
-
-          if (Math.abs(sX - tX) > Math.abs(sY - tY)) {
-            const midX = (tX + sX) / 2;
-            return `M ${sX},${sY} C ${midX},${sY} ${midX},${tY} ${tX},${tY}`;
-          } else {
-            const midY = (tY + sY) / 2;
-            return `M ${sX},${sY} C ${sX},${midY} ${tX},${midY} ${tX},${tY}`;
-          }
-        }}
+        pathFunc={handlePath}
         scaleExtent={{ min: 1, max: 10 }}
         nodeSize={{
           x: 150,
           y: 300,
         }}
         renderCustomNodeElement={(nodeInfo) =>
-          renderRectSvgNode(nodeInfo, handleNodeClick)
+          renderRectSvgNode(nodeInfo, selectedLang, handleNodeClick)
         }
         onNodeClick={handleNodeClick}
       />
       {!readOnly && (
         <NodeModal
+          node={node}
+          isOpen={!!node}
           onSubmit={handleSubmit}
           onDelete={handleDelete}
           onClose={handleClose}
-          node={node}
-          isOpen={!!node}
         />
       )}
     </div>
