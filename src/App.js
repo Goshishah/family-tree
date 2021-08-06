@@ -1,29 +1,35 @@
-import React from "react";
-import AppTree from "./AppTree";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
+import Routes from "./routes/Routes";
+import AppLoader from "./components/AppLoader/AppLoader";
+import { verifyService } from "./services/authService";
+import { loginAction } from "./redux/userReducer";
 import "./styles.css";
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    verifyService()
+      .then((response) => {
+        const { success, data } = response;
+        if (success) {
+          dispatch(loginAction({ ...data, isAuthenticated: true }));
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        setLoading(false);
+      });
+  }, [dispatch]);
+
+  if (loading) return <AppLoader />;
   return (
     <ChakraProvider>
-      <Router>
-        {/*
-          A <Switch> looks through all its children <Route>
-          elements and renders the first one whose path
-          matches the current URL. Use a <Switch> any time
-          you have multiple routes, but you want only one
-          of them to render at a time
-        */}
-        <Switch>
-          <Route exact path="/">
-            <AppTree />
-          </Route>
-          <Route path="/admin">
-            <AppTree readOnly={false} />
-          </Route>
-        </Switch>
-      </Router>
+      <Routes />
     </ChakraProvider>
   );
 }

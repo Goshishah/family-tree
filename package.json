@@ -8,13 +8,21 @@
     "@chakra-ui/react": "^1.6.5",
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
+    "formik": "^2.2.9",
     "framer-motion": "^4.1.17",
     "gh-pages": "^3.2.3",
+    "node-sass": "^4.14.1",
     "react": "17.0.0",
     "react-d3-tree": "2.0.0-beta.3",
     "react-dom": "17.0.0",
+    "react-icons": "^4.2.0",
+    "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "redux": "^4.1.1",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.3.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "typescript": "3.8.3"

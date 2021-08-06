@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Tree from "react-d3-tree";
 import NodeModal from "./NodeModal";
 import { useCenteredTree } from "./helpers";
-import { deleteTreeApi, getTreeApi, postTreeApi } from "./treeService";
+import { deleteTreeApi, getTreeApi, postTreeApi } from "./services/treeService";
 import { FormControl, Select, Button } from "@chakra-ui/react";
 import TreeNode from "./TreeNode";
 import languages from "./data/languages.json";
@@ -10,6 +10,7 @@ import languages from "./data/languages.json";
 const containerStyles = {
   width: "100vw",
   height: "100vh",
+  backgroundColor: "#E2E8F0",
 };
 
 const AppTree = ({ readOnly = true }) => {
