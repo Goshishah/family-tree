@@ -5,6 +5,17 @@ const TreeNode = (props) => {
   const { nodeDatum, toggleNode, readOnly, onNodeClick } = props;
   const { selectedLang } = useSelector((state) => state.general);
 
+  const getNodeStyleConfis = () => {
+    const fontStyle = {
+      ur: {
+        x: "40",
+        y: "63",
+        fontSize: "40px",
+      },
+    };
+
+    return fontStyle[selectedLang];
+  };
   const getName = () => {
     return nodeDatum.languages[selectedLang]
       ? nodeDatum.languages[selectedLang].name
@@ -72,8 +83,8 @@ const TreeNode = (props) => {
         textAnchor="start"
         transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
         xmlSpace="preserve"
+        {...getNodeStyleConfis()}
       >
-        {/* {nodeDatum.name} */}
         {getName()}
       </text>
     </g>

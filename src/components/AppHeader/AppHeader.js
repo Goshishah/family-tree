@@ -61,7 +61,9 @@ const LangSelect = () => {
       }}
     >
       {languages.map((lang) => (
-        <option value={lang.code}>{lang.name}</option>
+        <option key={lang.code} value={lang.code}>
+          {lang.name}
+        </option>
       ))}
     </Select>
   );
@@ -94,6 +96,7 @@ const UnauthenticatedHeader = () => {
               ))}
             </HStack>
           </HStack>
+          <Bismillah />
           <Flex alignItems={"center"}>
             <LangSelect />
           </Flex>
@@ -157,6 +160,7 @@ const AuthenticatedHeader = ({ username }) => {
               ))}
             </HStack>
           </HStack>
+          <Bismillah />
           <Flex alignItems={"center"}>
             <LangSelect />
             <Menu>
@@ -206,6 +210,9 @@ const AuthenticatedHeader = ({ username }) => {
   );
 };
 
+const Bismillah = () => {
+  return <div>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>;
+};
 const AppHeader = () => {
   const { username, isAuthenticated } = useSelector((state) => state.user);
 

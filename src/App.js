@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import Routes from "./routes/Routes";
 import AppLoader from "./components/AppLoader/AppLoader";
@@ -10,6 +10,15 @@ import "./styles.css";
 export default function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const { selectedLang } = useSelector((state) => state.general);
+
+  useEffect(() => {
+    try {
+      require(`./styles-${selectedLang}.css`);
+    } catch (error) {
+      require(`./styles-en.css`);
+    }
+  }, [selectedLang]);
 
   useEffect(() => {
     verifyService()

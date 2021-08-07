@@ -5,3 +5,34 @@
 
 .node-label {
 }
+
+@font-face {
+  font-family: bismillah;
+  src: url(https://cdn.qurancdn.com/assets/bismillah/bismillah-a45c018f4b0f553b104cc9a11d7c41fab6edcf4ab77b278bd7a49cf58d869698.woff2),
+    url(https://cdn.qurancdn.com/assets/bismillah/bismillah-844d3511bc5f9f060d2a09c12f3f479bded7f06225ec210cd8047d89eef10e6a.eot?#iefix)
+      format("embedded-opentype"),
+    url(https://cdn.qurancdn.com/assets/bismillah/bismillah-6543bb2d9a8154c580ace03754e5d3ba7f71ea8c1a335211592ab0cbeba5e1df.woff)
+      format("woff"),
+    url(https://cdn.qurancdn.com/assets/bismillah/bismillah-7ac73744cb8bcb8fb87dae1714c7ac3f492224b6d8a640311441d368e47093bd.ttf)
+      format("truetype"),
+    url(https://cdn.qurancdn.com/assets/bismillah/bismillah-0a96780dcdbe3f19a70f7729190967777e58a31eb2cc6d35c8056ff0f6242eea.svg#bismillah)
+      format("svg");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: nafees;
+  src: local("Nafees"), local("Nafees Regular"),
+    url(https://cdn.qurancdn.com/assets/languages/urdu/nafees/nafees-nastaleeq-webfont-8b5a03a69a3bdd17cdbdd3a59778b52d6eb98b4fc69ba09e2bcc24d74de50484.woff2),
+    url(https://cdn.qurancdn.com/assets/languages/urdu/nafees/nafees-nastaleeq-webfont-c9b2c653468851c147759abeb61cb8e98574d7914066df362611e8b39bb4c368.eot?#iefix)
+      format("embedded-opentype"),
+    url(https://cdn.qurancdn.com/assets/languages/urdu/nafees/nafees-nastaleeq-webfont-5c5fed0923a59ee17d1649c26a22e32c43ede7320d3ec8d2cc72f90e2e69e51d.woff)
+      format("woff"),
+    url(https://cdn.qurancdn.com/assets/languages/urdu/nafees/nafees-nastaleeq-webfont-438b74d9fd192baa357c1e8c9f2b07dfc7597d57fb5970bc7fc63094290d8092.ttf)
+      format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
