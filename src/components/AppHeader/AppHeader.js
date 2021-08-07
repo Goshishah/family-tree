@@ -124,6 +124,7 @@ const AuthenticatedHeader = ({ username }) => {
         if (success) {
           dispatch(logoutAction());
           removeAuthToken();
+          history.push(routesPath.default);
         }
       })
       .catch((error) => {
