@@ -82,7 +82,7 @@ const UnauthenticatedHeader = () => {
           />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
-              <AppLogo />
+              <AppLogo clickable />
             </Box>
             <HStack
               as={"nav"}
@@ -131,7 +131,6 @@ const AuthenticatedHeader = ({ username }) => {
       });
   };
 
-  const handleLanding = () => history.push(routesPath.default);
   return (
     <>
       <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
@@ -145,7 +144,7 @@ const AuthenticatedHeader = ({ username }) => {
           />
           <HStack spacing={8} alignItems={"center"}>
             <Box>
-              <AppLoader />
+              <AppLogo clickable />
             </Box>
             <HStack
               as={"nav"}
