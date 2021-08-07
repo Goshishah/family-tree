@@ -1,46 +1,122 @@
 import React from "react";
-import AppButton from "../AppButton/AppButton";
-import { logoutAction } from "../../redux/userReducer";
-import { useDispatch, useSelector } from "react-redux";
-import "./app-header.scss";
-import { logoutService, removeAuthToken } from "../../services/authService";
+import {
+  Box,
+  Flex,
+  Avatar,
+  HStack,
+  Link,
+  IconButton,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useDisclosure,
+  useColorModeValue,
+  Stack,
+  Select,
+} from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
+import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { logoutAction } from "../../redux/authReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { logoutService, removeAuthToken } from "../../services/authService";
 import { routesPath } from "../../routes/routesConfig";
+import avatar from "../../content/imgs/avatar.png";
 
-const AppLogo = () => {
-  const history = useHistory();
-  const handleLanding = () => history.push(routesPath.default);
+import languages from "../../data/languages.json";
 
-  return (
-    <img
-      className="app-logo"
-      src="https://logodix.com/logo/2004335.png"
-      onClick={handleLanding}
-    />
-  );
-};
+import "./app-header.scss";
+import { toggleLangAction } from "../../redux/generalReducer";
+import AppLoader from "../AppLoader/AppLoader";
+import AppLogo from "../AppLogo";
 
-const AppHeader = () => {
-  const { isAuthenticated } = useSelector((state) => state.user);
+const Links = ["Dashboard", "Projects", "Team"];
 
-  return (
-    <div className="app-header">
-      <AppLogo />
-      <div>
-        {isAuthenticated ? <AuthenticatedHeader /> : <UnauthenticatedHeader />}
-      </div>
-    </div>
-  );
-};
+const NavLink = ({ children }) => (
+  <Link
+    px={2}
+    py={1}
+    rounded={"md"}
+    _hover={{
+      textDecoration: "none",
+      bg: useColorModeValue("gray.200", "gray.700"),
+    }}
+    href={"#"}
+  >
+    {children}
+  </Link>
+);
 
-const AuthenticatedHeader = () => {
+const LangSelect = () => {
   const dispatch = useDispatch();
-  const history = useHistory();
-
-  const { firstname, lastname, isAuthenticated } = useSelector(
-    (state) => state.user
+  return (
+    <Select
+      variant="outline"
+      placeholder="Select your lanaguage"
+      m="0 15px 0 15px"
+      onChange={({ target }) => {
+        dispatch(toggleLangAction(target.value));
+      }}
+    >
+      {languages.map((lang) => (
+        <option value={lang.code}>{lang.name}</option>
+      ))}
+    </Select>
   );
+};
 
+const UnauthenticatedHeader = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <IconButton
+            size={"md"}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+          />
+          <HStack spacing={8} alignItems={"center"}>
+            <Box>
+              <AppLogo />
+            </Box>
+            <HStack
+              as={"nav"}
+              spacing={4}
+              display={{ base: "none", md: "flex" }}
+            >
+              {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))}
+            </HStack>
+          </HStack>
+          <Flex alignItems={"center"}>
+            <LangSelect />
+          </Flex>
+        </Flex>
+
+        {isOpen ? (
+          <Box pb={4} display={{ md: "none" }}>
+            <Stack as={"nav"} spacing={4}>
+              {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))}
+            </Stack>
+          </Box>
+        ) : null}
+      </Box>
+    </>
+  );
+};
+
+const AuthenticatedHeader = ({ username }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const history = useHistory();
+  const dispatch = useDispatch();
   const handleLogout = () => {
     logoutService({ email: "" })
       .then((response) => {
@@ -55,32 +131,88 @@ const AuthenticatedHeader = () => {
       });
   };
 
-  const handleDashboard = () => history.push(routesPath.dashbord);
-
+  const handleLanding = () => history.push(routesPath.default);
   return (
     <>
-      <AppButton onClick={handleLogout}>Logout</AppButton>
-      <AppButton onClick={handleDashboard}>Dashboard</AppButton>
-      <div className="greeting-title">
-        <span>{`Asslam O Alikum `}</span>
-        <strong className="greeting-name">
-          {firstname} {lastname}!
-        </strong>
-      </div>
+      <Box bg={useColorModeValue("gray.100", "gray.900")} px={4}>
+        <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+          <IconButton
+            size={"md"}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={"Open Menu"}
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+          />
+          <HStack spacing={8} alignItems={"center"}>
+            <Box>
+              <AppLoader />
+            </Box>
+            <HStack
+              as={"nav"}
+              spacing={4}
+              display={{ base: "none", md: "flex" }}
+            >
+              {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))}
+            </HStack>
+          </HStack>
+          <Flex alignItems={"center"}>
+            <LangSelect />
+            <Menu>
+              <Button
+                variant={"solid"}
+                size={"sm"}
+                mr={4}
+                style={{ boxShadow: "none" }}
+                _active={{ background: "transparent" }}
+                _hover={{
+                  textDecoration: "none",
+                  bg: useColorModeValue("gray.100", "gray.900"),
+                }}
+              >
+                {username}
+              </Button>
+              <MenuButton
+                as={Button}
+                rounded={"full"}
+                variant={"link"}
+                cursor={"pointer"}
+                minW={0}
+              >
+                <Avatar size={"sm"} src={avatar} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem>Link 1</MenuItem>
+                <MenuItem>Link 2</MenuItem>
+                <MenuDivider />
+                <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
+        </Flex>
+
+        {isOpen ? (
+          <Box pb={4} display={{ md: "none" }}>
+            <Stack as={"nav"} spacing={4}>
+              {Links.map((link) => (
+                <NavLink key={link}>{link}</NavLink>
+              ))}
+            </Stack>
+          </Box>
+        ) : null}
+      </Box>
     </>
   );
 };
 
-const UnauthenticatedHeader = () => {
-  const history = useHistory();
-  const handleLogin = () => history.push(routesPath.login);
-  const handleRegister = () => history.push(routesPath.register);
-  return (
-    <>
-      <AppButton onClick={handleLogin}>Login</AppButton>
-      <AppButton onClick={handleRegister}>Register</AppButton>
-    </>
+const AppHeader = () => {
+  const { username, isAuthenticated } = useSelector((state) => state.user);
+
+  return isAuthenticated ? (
+    <AuthenticatedHeader username={username} />
+  ) : (
+    <UnauthenticatedHeader />
   );
 };
-
 export default AppHeader;

@@ -6,7 +6,7 @@ const TYPE_LOGIN = "TYPE_LOGIN";
 const TYPE_LOGOUT = "TYPE_LOGOUT";
 
 //AUTH REDUCER
-const userReducer = (state = INITIAL_STATE, action) => {
+const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case TYPE_LOGIN:
       return { ...state, ...action.payload };
@@ -28,4 +28,4 @@ const logoutAction = () => ({
   type: TYPE_LOGOUT,
 });
 
-export { loginAction, logoutAction, userReducer };
+export { loginAction, logoutAction, authReducer };

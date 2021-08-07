@@ -37,7 +37,7 @@ export const loginService = ({ email, password }) => {
 };
 
 export const logoutService = ({ email, password }) => {
-  return fetch("/logout", {
+  return fetch(getApiUrl("logout"), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export const logoutService = ({ email, password }) => {
 };
 
 export const verifyService = () => {
-  return fetch("/verify", {
+  return fetch(getApiUrl("verify"), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

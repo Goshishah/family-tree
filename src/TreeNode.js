@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 
 const TreeNode = (props) => {
-  const { nodeDatum, toggleNode, readOnly, selectedLang, onNodeClick } = props;
+  const { nodeDatum, toggleNode, readOnly, onNodeClick } = props;
+  const { selectedLang } = useSelector((state) => state.general);
 
   const getName = () => {
     return nodeDatum.languages[selectedLang]

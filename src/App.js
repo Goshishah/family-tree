@@ -4,7 +4,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Routes from "./routes/Routes";
 import AppLoader from "./components/AppLoader/AppLoader";
 import { verifyService } from "./services/authService";
-import { loginAction } from "./redux/userReducer";
+import { loginAction } from "./redux/authReducer";
 import "./styles.css";
 
 export default function App() {

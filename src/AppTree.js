@@ -5,12 +5,11 @@ import { useCenteredTree } from "./helpers";
 import { deleteTreeApi, getTreeApi, postTreeApi } from "./services/treeService";
 import { FormControl, Select, Button } from "@chakra-ui/react";
 import TreeNode from "./TreeNode";
-import languages from "./data/languages.json";
+import AppHeader from "./components/AppHeader/AppHeader";
 
 const containerStyles = {
   width: "100vw",
   height: "100vh",
-  backgroundColor: "#E2E8F0",
 };
 
 const AppTree = ({ readOnly = true }) => {
@@ -26,7 +25,6 @@ const AppTree = ({ readOnly = true }) => {
     },
     children: [],
   });
-  const [selectedLang, setSelectedLang] = useState("en");
 
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
@@ -60,14 +58,14 @@ const AppTree = ({ readOnly = true }) => {
 
   // Here we're using `renderCustomNodeElement` to represent each node
   // as an SVG `rect` instead of the default `circle`.
-  const renderRectSvgNode = (customProps, selectedLang, onNodeClick) => {
+  const renderRectSvgNode = (customProps, onNodeClick) => {
     return (
       <>
         {/* <Flag /> */}
         <TreeNode
+          key={customProps.nodeDatum.id}
           readOnly={readOnly}
           onNodeClick={onNodeClick}
-          selectedLang={selectedLang}
           {...customProps}
         />
       </>
@@ -114,23 +112,13 @@ const AppTree = ({ readOnly = true }) => {
 
   return (
     <div style={containerStyles} ref={containerRef}>
+      <AppHeader />
       <FormControl>
         {!readOnly && (
           <Button color="blue.500" variant="solid" onClick={downloadFile}>
             Download Json
           </Button>
         )}
-        <Select
-          variant="outline"
-          placeholder="Select your lanaguage"
-          onChange={({ target }) => {
-            setSelectedLang(target.value);
-          }}
-        >
-          {languages.map((lang) => (
-            <option value={lang.code}>{lang.name}</option>
-          ))}
-        </Select>
       </FormControl>
       <Tree
         data={tree}
@@ -143,7 +131,7 @@ const AppTree = ({ readOnly = true }) => {
           y: 300,
         }}
         renderCustomNodeElement={(nodeInfo) =>
-          renderRectSvgNode(nodeInfo, selectedLang, handleNodeClick)
+          renderRectSvgNode(nodeInfo, handleNodeClick)
         }
         onNodeClick={handleNodeClick}
       />

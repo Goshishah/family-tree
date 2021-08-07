@@ -6,8 +6,7 @@
 
 // import AppInput from "../../components/AppInput/AppInput";
 // import AppButton from "../../components/AppButton/AppButton";
-// import { loginService, setAuthToken } from "../../services/authService";
-// import { loginAction } from "../../redux/userReducer";
+// import { loginAction } from "../../redux/authReducer";
 // import { routesPath } from "../../routes/routesConfig";
 // import "./login.scss";
 // import AppHeader from "../../components/AppHeader/AppHeader";
@@ -115,11 +114,17 @@ import {
   FormControl,
   FormHelperText,
   InputRightElement,
+  FormErrorMessage,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  AlertTitle,
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { loginService, setAuthToken } from "../../services/authService";
-import { loginAction } from "../../redux/userReducer";
+import { loginAction } from "../../redux/authReducer";
 import { routesPath } from "../../routes/routesConfig";
+import AppLogo from "../../components/AppLogo";
 
 const CFaUserAlt = chakra(FaUserAlt);
 const CFaLock = chakra(FaLock);
@@ -135,17 +140,18 @@ const Login = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "admin@saadatshajra.com",
-      password: "admin",
+      email: "",
+      password: "",
+      error: "",
     },
     validationSchema: Yup.object().shape({
       email: Yup.string()
         .email("Please enter valid email")
-        .max(320, "Email is too long")
-        .required("Required"),
+        .max(320, "Email is too long.")
+        .required("Email is required."),
       password: Yup.string()
-        .max(200, "Password is too long")
-        .required("Required"),
+        .max(200, "Password is too long.")
+        .required("Password is required."),
     }),
     onSubmit: (values) => {
       const { email, password } = values;
@@ -156,16 +162,16 @@ const Login = () => {
           if (success) {
             setAuthToken(data.accessToken);
             dispatch(
-              // loginAction({ ...data, isAuthenticated: !!data.accessToken })
-              loginAction({ ...data })
+              loginAction({ ...data, isAuthenticated: !!data.accessToken })
             );
             history.push(routesPath.admin);
           } else {
             formik.setFieldError("email", message);
+            formik.setErrors({ error: response.message });
           }
         })
-        .catch((error) => {
-          console.log("error.......", error);
+        .catch((response) => {
+          formik.setErrors({ error: response.message });
         });
     },
   });
@@ -182,7 +188,7 @@ const Login = () => {
       flexDirection="column"
       width="100wh"
       height="100vh"
-      backgroundColor="gray.200"
+      backgroundColor="gray.100"
       justifyContent="center"
       alignItems="center"
     >
@@ -192,7 +198,7 @@ const Login = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Avatar bg="teal.500" />
+        <AppLogo />
         <Heading color="teal.400">Welcome</Heading>
         <Box minW={{ base: "90%", md: "468px" }}>
           <form>
@@ -202,7 +208,14 @@ const Login = () => {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-              <FormControl>
+              {errors.error && (
+                <Alert status="error">
+                  <AlertIcon />
+                  <AlertTitle mr={2}>Incorrect credentials!</AlertTitle>
+                  <AlertDescription>{errors.error}</AlertDescription>
+                </Alert>
+              )}
+              <FormControl isInvalid={touched.email && errors.email}>
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
@@ -210,14 +223,17 @@ const Login = () => {
                   />
                   <Input
                     type="email"
+                    name="email"
                     placeholder="email address"
                     value={values.email}
-                    error={touched.email && errors.email}
                     onChange={handleChange}
                   />
                 </InputGroup>
+                <FormErrorMessage>
+                  {touched.email && errors.email}
+                </FormErrorMessage>
               </FormControl>
-              <FormControl>
+              <FormControl isInvalid={touched.password && errors.password}>
                 <InputGroup>
                   <InputLeftElement
                     pointerEvents="none"
@@ -226,6 +242,7 @@ const Login = () => {
                   />
                   <Input
                     type={showPassword ? "text" : "password"}
+                    name="password"
                     placeholder="Password"
                     value={values.password}
                     error={touched.password && errors.password}
@@ -237,6 +254,9 @@ const Login = () => {
                     </Button>
                   </InputRightElement>
                 </InputGroup>
+                <FormErrorMessage>
+                  {touched.password && errors.password}
+                </FormErrorMessage>
                 <FormHelperText textAlign="right">
                   <Link>forgot password?</Link>
                 </FormHelperText>
