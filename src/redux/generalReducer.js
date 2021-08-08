@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  selectedLang: "en",
+  selectedLang: "",
 };
 
 const TYPE_TOGGLE_LANGUAGE = "TYPE_TOGGLE_LANGUAGE";

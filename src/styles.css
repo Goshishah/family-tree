@@ -1,3 +1,7 @@
+.bismillah {
+  font-family: bismillah;
+  font-family: me_quran;
+}
 .node-title {
   dx: -200;
   fill: green;
@@ -34,5 +38,11 @@
       format("truetype");
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: me_quran;
+  src: url(https://cdn.qurancdn.com/assets/quran_fonts/me_quran/me_quran-40c3436c134c511aba4c25355f70915ee2a0b8a850080691742aabd5216dfdbe.ttf);
   font-display: swap;
 }

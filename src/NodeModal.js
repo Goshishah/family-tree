@@ -80,7 +80,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
             <Select
               placeholder="Select gender"
               value={selectedNode && selectedNode.gender}
-              disabled={selectedNode && !selectedNode.name}
+              disabled={selectedNode && !selectedNode.languages}
               onChange={({ target }) =>
                 setSelectedNode({ ...selectedNode, gender: target.value })
               }

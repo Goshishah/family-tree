@@ -23,16 +23,18 @@ import AppLogo from "../AppLogo";
 import { logoutAction } from "../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutService, removeAuthToken } from "../../services/authService";
+import storageService from "../../services/storageService";
 import { routesPath } from "../../routes/routesConfig";
 import avatar from "../../content/imgs/avatar.png";
 import languages from "../../data/languages.json";
 import { toggleLangAction } from "../../redux/generalReducer";
 import "./app-header.scss";
+import DownloadAs from "../DownloadAs/DownloadAs";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
 const Bismillah = () => {
-  return <div>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>;
+  return <div className="bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>;
 };
 
 const NavLink = ({ children }) => (
@@ -52,13 +54,17 @@ const NavLink = ({ children }) => (
 
 const LangSelect = () => {
   const dispatch = useDispatch();
+  const { selectedLang } = useSelector((state) => state.general);
   return (
     <Select
       variant="outline"
       placeholder="Select your lanaguage"
+      value={selectedLang || "en"}
       m="0 15px 0 15px"
       onChange={({ target }) => {
         dispatch(toggleLangAction(target.value));
+        storageService.setItem("locale", target.value);
+        window.location.reload();
       }}
     >
       {languages.map((lang) => (
@@ -70,7 +76,7 @@ const LangSelect = () => {
   );
 };
 
-const UnauthenticatedHeader = () => {
+const UnauthenticatedHeader = ({ treeRef }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
@@ -95,6 +101,7 @@ const UnauthenticatedHeader = () => {
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
+              <DownloadAs treeRef={treeRef} />
             </HStack>
           </HStack>
           <Bismillah />
@@ -117,7 +124,7 @@ const UnauthenticatedHeader = () => {
   );
 };
 
-const AuthenticatedHeader = ({ username, onTreeJsonDownload }) => {
+const AuthenticatedHeader = ({ username, treeRef, onTreeJsonDownload }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -159,6 +166,7 @@ const AuthenticatedHeader = ({ username, onTreeJsonDownload }) => {
               {Links.map((link) => (
                 <NavLink key={link}>{link}</NavLink>
               ))}
+              <DownloadAs treeRef={treeRef} />
             </HStack>
           </HStack>
           <Bismillah />
@@ -213,16 +221,20 @@ const AuthenticatedHeader = ({ username, onTreeJsonDownload }) => {
   );
 };
 
-const AppHeader = ({ onTreeJsonDownload }) => {
+const AppHeader = ({ treeRef, onTreeJsonDownload }) => {
   const { username, isAuthenticated } = useSelector((state) => state.user);
 
   return isAuthenticated ? (
     <AuthenticatedHeader
       username={username}
+      treeRef={treeRef}
       onTreeJsonDownload={onTreeJsonDownload}
     />
   ) : (
-    <UnauthenticatedHeader onTreeJsonDownload={onTreeJsonDownload} />
+    <UnauthenticatedHeader
+      treeRef={treeRef}
+      onTreeJsonDownload={onTreeJsonDownload}
+    />
   );
 };
 export default AppHeader;

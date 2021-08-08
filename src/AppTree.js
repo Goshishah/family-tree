@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Tree from "react-d3-tree";
 import NodeModal from "./NodeModal";
 import { useCenteredTree } from "./helpers";
@@ -14,6 +14,7 @@ const containerStyles = {
 
 const AppTree = ({ readOnly = true }) => {
   const [tree, setTree] = useState(null);
+  const treeRef = useRef(null);
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
   const [orientation, setOrientation] = useState("vertical");
@@ -49,7 +50,6 @@ const AppTree = ({ readOnly = true }) => {
   const renderRectSvgNode = (customProps, onNodeClick) => {
     return (
       <>
-        {/* <Flag /> */}
         <TreeNode
           key={customProps.nodeDatum.id}
           readOnly={readOnly}
@@ -100,9 +100,10 @@ const AppTree = ({ readOnly = true }) => {
 
   return (
     <div style={containerStyles} ref={containerRef}>
-      <AppHeader onTreeJsonDownload={downloadFile} />
+      <AppHeader onTreeJsonDownload={downloadFile} treeRef={treeRef} />
       {tree ? (
         <Tree
+          ref={treeRef}
           data={tree}
           orientation={orientation}
           translate={translate}

@@ -4,8 +4,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Routes from "./routes/Routes";
 import AppLoader from "./components/AppLoader/AppLoader";
 import { verifyService } from "./services/authService";
+import storageService from "./services/storageService";
 import { loginAction } from "./redux/authReducer";
 import "./styles.css";
+import { toggleLangAction } from "./redux/generalReducer";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -33,6 +35,8 @@ export default function App() {
         console.log(error);
         setLoading(false);
       });
+    const locale = storageService.getItem("locale");
+    dispatch(toggleLangAction(locale));
   }, [dispatch]);
 
   if (loading) return <AppLoader />;
