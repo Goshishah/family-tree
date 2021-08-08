@@ -3,9 +3,9 @@ import Tree from "react-d3-tree";
 import NodeModal from "./NodeModal";
 import { useCenteredTree } from "./helpers";
 import { deleteTreeApi, getTreeApi, postTreeApi } from "./services/treeService";
-import { FormControl, Select, Button } from "@chakra-ui/react";
 import TreeNode from "./TreeNode";
 import AppHeader from "./components/AppHeader/AppHeader";
+import AppLoader from "./components/AppLoader/AppLoader";
 
 const containerStyles = {
   width: "100vw",
@@ -13,19 +13,7 @@ const containerStyles = {
 };
 
 const AppTree = ({ readOnly = true }) => {
-  const [tree, setTree] = useState({
-    languages: {
-      ar: { name: "مُحَمَّد" },
-      ur: { name: "محمد" },
-      en: { name: "Muhammad" },
-    },
-    gender: "male",
-    attributes: {
-      id: "411d9783-85ba-41e5-a6a3-5e1cca3d294f",
-    },
-    children: [],
-  });
-
+  const [tree, setTree] = useState(null);
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
   const [orientation, setOrientation] = useState("vertical");
@@ -112,29 +100,26 @@ const AppTree = ({ readOnly = true }) => {
 
   return (
     <div style={containerStyles} ref={containerRef}>
-      <AppHeader />
-      <FormControl>
-        {!readOnly && (
-          <Button color="blue.500" variant="solid" onClick={downloadFile}>
-            Download Json
-          </Button>
-        )}
-      </FormControl>
-      <Tree
-        data={tree}
-        orientation={orientation}
-        translate={translate}
-        pathFunc={handlePath}
-        scaleExtent={{ min: 1, max: 10 }}
-        nodeSize={{
-          x: 150,
-          y: 300,
-        }}
-        renderCustomNodeElement={(nodeInfo) =>
-          renderRectSvgNode(nodeInfo, handleNodeClick)
-        }
-        onNodeClick={handleNodeClick}
-      />
+      <AppHeader onTreeJsonDownload={downloadFile} />
+      {tree ? (
+        <Tree
+          data={tree}
+          orientation={orientation}
+          translate={translate}
+          pathFunc={handlePath}
+          scaleExtent={{ min: 1, max: 10 }}
+          nodeSize={{
+            x: 150,
+            y: 300,
+          }}
+          renderCustomNodeElement={(nodeInfo) =>
+            renderRectSvgNode(nodeInfo, handleNodeClick)
+          }
+          onNodeClick={handleNodeClick}
+        />
+      ) : (
+        <AppLoader />
+      )}
       {!readOnly && (
         <NodeModal
           node={node}

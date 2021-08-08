@@ -19,20 +19,21 @@ import {
 } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import AppLogo from "../AppLogo";
 import { logoutAction } from "../../redux/authReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutService, removeAuthToken } from "../../services/authService";
 import { routesPath } from "../../routes/routesConfig";
 import avatar from "../../content/imgs/avatar.png";
-
 import languages from "../../data/languages.json";
-
-import "./app-header.scss";
 import { toggleLangAction } from "../../redux/generalReducer";
-import AppLoader from "../AppLoader/AppLoader";
-import AppLogo from "../AppLogo";
+import "./app-header.scss";
 
 const Links = ["Dashboard", "Projects", "Team"];
+
+const Bismillah = () => {
+  return <div>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>;
+};
 
 const NavLink = ({ children }) => (
   <Link
@@ -116,7 +117,7 @@ const UnauthenticatedHeader = () => {
   );
 };
 
-const AuthenticatedHeader = ({ username }) => {
+const AuthenticatedHeader = ({ username, onTreeJsonDownload }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -187,8 +188,10 @@ const AuthenticatedHeader = ({ username }) => {
                 <Avatar size={"sm"} src={avatar} />
               </MenuButton>
               <MenuList>
-                <MenuItem>Link 1</MenuItem>
-                <MenuItem>Link 2</MenuItem>
+                <MenuItem onClick={onTreeJsonDownload}>
+                  Download tree data
+                </MenuItem>
+                <MenuItem>Settings</MenuItem>
                 <MenuDivider />
                 <MenuItem onClick={handleLogout}>Logout</MenuItem>
               </MenuList>
@@ -210,16 +213,16 @@ const AuthenticatedHeader = ({ username }) => {
   );
 };
 
-const Bismillah = () => {
-  return <div>بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيم</div>;
-};
-const AppHeader = () => {
+const AppHeader = ({ onTreeJsonDownload }) => {
   const { username, isAuthenticated } = useSelector((state) => state.user);
 
   return isAuthenticated ? (
-    <AuthenticatedHeader username={username} />
+    <AuthenticatedHeader
+      username={username}
+      onTreeJsonDownload={onTreeJsonDownload}
+    />
   ) : (
-    <UnauthenticatedHeader />
+    <UnauthenticatedHeader onTreeJsonDownload={onTreeJsonDownload} />
   );
 };
 export default AppHeader;
