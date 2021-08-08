@@ -67,7 +67,10 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
               onChange={(event) => {
                 setSelectedNode({
                   ...selectedNode,
-                  name: event.target.value,
+                  languages: {
+                    ...selectedNode.languages,
+                    [selectedNode.languageCode]: { name: event.target.value },
+                  },
                 });
               }}
             />
