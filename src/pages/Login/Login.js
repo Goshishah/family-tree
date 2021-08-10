@@ -110,7 +110,6 @@ import {
   chakra,
   Box,
   Link,
-  Avatar,
   FormControl,
   FormHelperText,
   InputRightElement,
@@ -122,6 +121,7 @@ import {
 } from "@chakra-ui/react";
 import { FaUserAlt, FaLock } from "react-icons/fa";
 import { loginService, setAuthToken } from "../../services/authService";
+import storageService from "../../services/storageService";
 import { loginAction } from "../../redux/authReducer";
 import { routesPath } from "../../routes/routesConfig";
 import AppLogo from "../../components/AppLogo";
@@ -160,10 +160,9 @@ const Login = () => {
           console.log(response);
           const { success, data, message } = response;
           if (success) {
-            setAuthToken(data.accessToken);
-            dispatch(
-              loginAction({ ...data, isAuthenticated: !!data.accessToken })
-            );
+            setAuthToken(data.token);
+            storageService.setItem("user", JSON.stringify(data));
+            dispatch(loginAction({ ...data, isAuthenticated: !!data.token }));
             history.push(routesPath.admin);
           } else {
             formik.setFieldError("email", message);

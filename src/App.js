@@ -6,28 +6,29 @@ import AppLoader from "./components/AppLoader/AppLoader";
 import { verifyService } from "./services/authService";
 import storageService from "./services/storageService";
 import { loginAction } from "./redux/authReducer";
-import "./styles.css";
 import { toggleLangAction } from "./redux/generalReducer";
+import "./styles.css";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   const { selectedLang } = useSelector((state) => state.general);
 
-  useEffect(() => {
-    try {
-      require(`./styles-${selectedLang}.css`);
-    } catch (error) {
-      require(`./styles-en.css`);
-    }
-  }, [selectedLang]);
+  // useEffect(() => {
+  //   try {
+  //     require(`./styles-${selectedLang}.css`);
+  //   } catch (error) {
+  //     require(`./styles-en.css`);
+  //   }
+  // }, [selectedLang]);
 
   useEffect(() => {
-    verifyService()
+    const user = storageService.getItem("user");
+    verifyService({ ...JSON.parse(user) })
       .then((response) => {
         const { success, data } = response;
         if (success) {
-          dispatch(loginAction({ ...data, isAuthenticated: true }));
+          dispatch(loginAction({ ...data, isAuthenticated: !!data.token }));
         }
         setLoading(false);
       })

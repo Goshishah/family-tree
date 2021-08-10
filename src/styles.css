@@ -10,7 +10,7 @@
 .node-label {
 }
 
-@font-face {
+/* @font-face {
   font-family: bismillah;
   src: url(https://cdn.qurancdn.com/assets/bismillah/bismillah-a45c018f4b0f553b104cc9a11d7c41fab6edcf4ab77b278bd7a49cf58d869698.woff2),
     url(https://cdn.qurancdn.com/assets/bismillah/bismillah-844d3511bc5f9f060d2a09c12f3f479bded7f06225ec210cd8047d89eef10e6a.eot?#iefix)
@@ -24,7 +24,7 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-}
+} */
 
 @font-face {
   font-family: nafees;
@@ -40,9 +40,13 @@
   font-style: normal;
   font-display: swap;
 }
-
+/* 
 @font-face {
   font-family: me_quran;
   src: url(https://cdn.qurancdn.com/assets/quran_fonts/me_quran/me_quran-40c3436c134c511aba4c25355f70915ee2a0b8a850080691742aabd5216dfdbe.ttf);
   font-display: swap;
+} */
+
+* {
+  font-family: nafees;
 }

@@ -5,21 +5,190 @@ const TreeNode = (props) => {
   const { nodeDatum, toggleNode, readOnly, onNodeClick } = props;
   const { selectedLang } = useSelector((state) => state.general);
 
-  const getNodeStyleConfis = () => {
+  const getNodeStyleConfis = (key) => {
     const fontStyle = {
-      ur: {
-        x: "40",
-        y: "63",
-        fontSize: "40px",
+      surname: {
+        ur: {
+          x: "50",
+          y: "32",
+          fontSize: "15",
+        },
+        ar: {
+          x: "50",
+          y: "32",
+          fontSize: "15",
+        },
+      },
+      firstname: {
+        ur: {
+          x: "75",
+          y: "45",
+          fontSize: "15",
+        },
+        ar: {
+          x: "75",
+          y: "45",
+          fontSize: "15",
+        },
+      },
+      middlename: {
+        ur: {
+          x: "35",
+          y: "70",
+          fontSize: "50",
+        },
+        ar: {
+          x: "25",
+          y: "70",
+          fontSize: "30",
+        },
+      },
+      lastname: {
+        ur: {
+          x: "45",
+          y: "60",
+          fontSize: "40",
+        },
+        ar: {
+          x: "25",
+          y: "60",
+          fontSize: "40",
+        },
+      },
+      laqab: {
+        ur: {
+          x: "20",
+          y: "40",
+          fontSize: "10",
+        },
+        ar: {
+          x: "15",
+          y: "45",
+          fontSize: "15",
+        },
       },
     };
 
-    return fontStyle[selectedLang];
+    return fontStyle[key][selectedLang];
   };
-  const getName = () => {
+
+  const getCost = (key) => {
+    return (
+      <text
+        x="90"
+        y="50"
+        fill="#000"
+        stroke="#000"
+        strokeWidth="0"
+        fontSize="40"
+        textAnchor="start"
+        transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
+        xmlSpace="preserve"
+        {...getNodeStyleConfis(key)}
+      >
+        {getFullName().surname}
+      </text>
+    );
+  };
+
+  const getFirstname = (key) => {
+    return (
+      <text
+        x="90"
+        y="50"
+        fill="#000"
+        stroke="#000"
+        strokeWidth="0"
+        fontFamily="monospace"
+        fontSize="15"
+        fontStyle="normal"
+        fontWeight="normal"
+        textAnchor="start"
+        transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
+        xmlSpace="preserve"
+        {...getNodeStyleConfis(key)}
+      >
+        {getFullName().firstname}
+      </text>
+    );
+  };
+
+  const getMiddlename = (key) => {
+    return (
+      <text
+        x="29.5"
+        y="57.051"
+        fill="#000"
+        stroke="#000"
+        strokeWidth="0"
+        fontFamily="monospace"
+        fontSize="24"
+        fontStyle="normal"
+        fontWeight="normal"
+        textAnchor="start"
+        transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
+        xmlSpace="preserve"
+        {...getNodeStyleConfis(key)}
+      >
+        {getFullName().middlename}
+      </text>
+    );
+  };
+
+  const getLastname = (key) => {
+    return (
+      <text
+        x="29.5"
+        y="57.051"
+        fill="#000"
+        stroke="#000"
+        strokeWidth="0"
+        fontFamily="monospace"
+        fontSize="24"
+        fontStyle="normal"
+        fontWeight="normal"
+        textAnchor="start"
+        transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
+        xmlSpace="preserve"
+        {...getNodeStyleConfis(key)}
+      >
+        {getFullName().lastname}
+      </text>
+    );
+  };
+
+  const getLaqab = (key) => {
+    return (
+      <text
+        x="29.5"
+        y="57.051"
+        fill="#000"
+        stroke="#000"
+        strokeWidth="0"
+        fontFamily="monospace"
+        fontSize="24"
+        fontStyle="normal"
+        fontWeight="normal"
+        textAnchor="start"
+        transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
+        xmlSpace="preserve"
+        {...getNodeStyleConfis(key)}
+      >
+        {getFullName().laqab}
+      </text>
+    );
+  };
+
+  const getFullName = () => {
     return nodeDatum.languages[selectedLang]
-      ? nodeDatum.languages[selectedLang].name
-      : "N/A";
+      ? nodeDatum.languages[selectedLang]
+      : {
+          surname: "",
+          firstname: "",
+          middlename: "",
+          lastname: "",
+          laqab: "",
+        };
   };
 
   return (
@@ -70,23 +239,11 @@ const TreeNode = (props) => {
           d="M85.011 48.522c0 18.522-15.475 33.537-34.565 33.537S15.881 67.044 15.881 48.522s15.475-33.538 34.565-33.538 34.565 15.015 34.565 33.538z"
         ></path>
       </g>
-      <text
-        x="29.5"
-        y="57.051"
-        fill="#000"
-        stroke="#000"
-        strokeWidth="0"
-        fontFamily="monospace"
-        fontSize="24"
-        fontStyle="normal"
-        fontWeight="normal"
-        textAnchor="start"
-        transform="matrix(.64759 0 0 1.05366 12.847 -1.65)"
-        xmlSpace="preserve"
-        {...getNodeStyleConfis()}
-      >
-        {getName()}
-      </text>
+      {getCost("surname")}
+      {getFirstname("firstname")}
+      {getMiddlename("middlename")}
+      {getLastname("lastname")}
+      {getLaqab("laqab")}
     </g>
   );
 };

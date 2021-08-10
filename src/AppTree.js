@@ -103,6 +103,8 @@ const AppTree = ({ readOnly = true }) => {
       <AppHeader onTreeJsonDownload={downloadFile} treeRef={treeRef} />
       {tree ? (
         <Tree
+          data-id="tree"
+          svgClassName="family-tree"
           ref={treeRef}
           data={tree}
           orientation={orientation}

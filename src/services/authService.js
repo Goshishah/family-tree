@@ -47,14 +47,15 @@ export const logoutService = ({ email, password }) => {
   }).then((response) => response.json());
 };
 
-export const verifyService = () => {
+export const verifyService = (user) => {
   return fetch(getApiUrl("verify"), {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${getAuthToken()}`,
       mode: "no-cors",
     },
+    body: JSON.stringify({ user }),
   }).then((response) => response.json());
 };
 
