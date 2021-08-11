@@ -59,7 +59,7 @@ const LangSelect = () => {
     <Select
       variant="outline"
       placeholder="Select your lanaguage"
-      value={selectedLang || "en"}
+      value={selectedLang || "ur"}
       m="0 15px 0 15px"
       onChange={({ target }) => {
         dispatch(toggleLangAction(target.value));

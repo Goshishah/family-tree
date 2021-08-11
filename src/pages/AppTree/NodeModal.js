@@ -18,7 +18,7 @@ import {
   Select,
   Spacer,
 } from "@chakra-ui/react";
-import languages from "./data/languages.json";
+import languages from "../../data/languages.json";
 
 const FormInput = ({ keyName, selectedNode, setSelectedNode }) => {
   return (
@@ -48,7 +48,7 @@ const FormInput = ({ keyName, selectedNode, setSelectedNode }) => {
 
 const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
   const [selectedNode, setSelectedNode] = useState(undefined);
-  const [child, setChild] = useState({ middlename: "" });
+  const [child, setChild] = useState({ middlename: "", languageCode: "ur" });
 
   useEffect(() => {
     setSelectedNode(node);
@@ -137,6 +137,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
                   value={selectedNode && selectedNode.gender}
                   disabled={
                     selectedNode &&
+                    selectedNode.languages[selectedNode.languageCode] &&
                     !selectedNode.languages[selectedNode.languageCode]
                       .middlename
                   }
@@ -155,9 +156,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
                 <FormLabel>Select language</FormLabel>
                 <Select
                   variant="outline"
-                  value={
-                    child && child.languageCode ? child.languageCode : "ur"
-                  }
+                  value={child && child.languageCode}
                   placeholder="Select your lanaguage"
                   onChange={({ target }) => {
                     setChild({ ...child, languageCode: target.value });
@@ -243,11 +242,13 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
             color="blue.500"
             variant="solid"
             onClick={() => {
+              console.log("child", child);
               onSubmit(selectedNode, child);
               setChild({ name: "" });
             }}
             disabled={
               selectedNode &&
+              selectedNode.languages[selectedNode.languageCode] &&
               !selectedNode.languages[selectedNode.languageCode].middlename
             }
           >

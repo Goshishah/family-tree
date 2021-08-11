@@ -1,16 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import Tree from "react-d3-tree";
 import NodeModal from "./NodeModal";
-import { useCenteredTree } from "./helpers";
-import { deleteTreeApi, getTreeApi, postTreeApi } from "./services/treeService";
+import { useCenteredTree } from "../../helpers";
+import {
+  deleteTreeApi,
+  getTreeApi,
+  postTreeApi,
+} from "../../services/treeService";
 import TreeNode from "./TreeNode";
-import AppHeader from "./components/AppHeader/AppHeader";
-import AppLoader from "./components/AppLoader/AppLoader";
-
-const containerStyles = {
-  width: "100vw",
-  height: "100vh",
-};
+import AppHeader from "../../components/AppHeader/AppHeader";
+import AppLoader from "../../components/AppLoader/AppLoader";
+import "./app-tree.scss";
 
 const AppTree = ({ readOnly = true }) => {
   const [tree, setTree] = useState(null);
@@ -49,14 +49,15 @@ const AppTree = ({ readOnly = true }) => {
   // as an SVG `rect` instead of the default `circle`.
   const renderRectSvgNode = (customProps, onNodeClick) => {
     return (
-      <>
-        <TreeNode
-          key={customProps.nodeDatum.id}
-          readOnly={readOnly}
-          onNodeClick={onNodeClick}
-          {...customProps}
-        />
-      </>
+      <g
+        onClick={
+          readOnly
+            ? customProps.toggleNode
+            : () => onNodeClick(customProps.nodeDatum)
+        }
+      >
+        <TreeNode key={customProps.nodeDatum.id} {...customProps} />
+      </g>
     );
   };
 
@@ -84,10 +85,10 @@ const AppTree = ({ readOnly = true }) => {
 
   const handlePath = (linkData, orientation) => {
     const { source, target } = linkData;
-    const sX = source.x + 50;
-    const sY = source.y + 90;
-    const tX = target.x + 50;
-    const tY = target.y + 90;
+    const sX = source.x + 120;
+    const sY = source.y + 180;
+    const tX = target.x + 120;
+    const tY = target.y + 180;
 
     if (Math.abs(sX - tX) > Math.abs(sY - tY)) {
       const midX = (tX + sX) / 2;
@@ -99,21 +100,24 @@ const AppTree = ({ readOnly = true }) => {
   };
 
   return (
-    <div style={containerStyles} ref={containerRef}>
+    <div className="app-tree" ref={containerRef}>
       <AppHeader onTreeJsonDownload={downloadFile} treeRef={treeRef} />
       {tree ? (
         <Tree
           data-id="tree"
           svgClassName="family-tree"
+          rootNodeClassName="root-node"
+          branchNodeClassName="branch-node"
+          leafNodeClassName="leaf-node"
           ref={treeRef}
           data={tree}
           orientation={orientation}
           translate={translate}
           pathFunc={handlePath}
-          scaleExtent={{ min: 1, max: 10 }}
+          scaleExtent={{ min: 0.1, max: 10 }}
           nodeSize={{
-            x: 150,
-            y: 300,
+            x: 300,
+            y: 500,
           }}
           renderCustomNodeElement={(nodeInfo) =>
             renderRectSvgNode(nodeInfo, handleNodeClick)

@@ -1,6 +1,6 @@
 import React from "react";
 import Login from "../pages/Login/Login";
-import AppTree from "../AppTree";
+import AppTree from "../pages/AppTree/AppTree";
 
 // import Register from "../pages/Register/Register";
 // import NoMatch from "../pages/NoMatch/NoMatch";

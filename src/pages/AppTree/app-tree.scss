@@ -1,0 +1,34 @@
+.app-tree {
+  flex-direction: column;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+
+  .root-node {
+    fill: #000 !important;
+    stroke: #000 !important;
+
+    .middlename {
+      font-size: 90px;
+    }
+    .laqab {
+      font-size: 15px;
+    }
+  }
+
+  .branch-node {
+    fill: #000 !important;
+    stroke: #000 !important;
+
+    .middlename {
+      font-size: 40px;
+    }
+  }
+
+  text {
+    fill: #000;
+    stroke: #000;
+    font-weight: normal;
+    stroke-width: 0;
+  }
+}
