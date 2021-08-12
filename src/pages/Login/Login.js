@@ -133,7 +133,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const history = useHistory();
-  const { isAuthenticated, roles } = useSelector((state) => state.user);
+  const { isAuthenticated } = useSelector((state) => state.user);
   history.push(
     isAuthenticated ? history.push(routesPath.dashbord) : routesPath.login
   );

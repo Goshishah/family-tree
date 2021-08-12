@@ -11,7 +11,6 @@ import {
 import { Button } from "@chakra-ui/button";
 import {
   Flex,
-  Box,
   FormControl,
   FormLabel,
   Input,
@@ -86,7 +85,9 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
                   }}
                 >
                   {languages.map((lang) => (
-                    <option value={lang.code}>{lang.name}</option>
+                    <option key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </option>
                   ))}
                 </Select>
               </FormControl>
@@ -163,7 +164,9 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
                   }}
                 >
                   {languages.map((lang) => (
-                    <option value={lang.code}>{lang.name}</option>
+                    <option key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </option>
                   ))}
                 </Select>
               </FormControl>
