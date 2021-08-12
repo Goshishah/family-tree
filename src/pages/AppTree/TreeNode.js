@@ -192,10 +192,10 @@ const TreeNode = ({ nodeDatum }) => {
       />
       <path
         d="M211 112a98 98 0 11-196 0 98 98 0 01196 0z"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
         stroke="#000"
         fill="#000"
-        stroke-width="1.3793"
+        strokeWidth="1.3793"
       />
       <path
         d="M208 112a95 95 0 11-190 0 95 95 0 01190 0z"
@@ -204,22 +204,22 @@ const TreeNode = ({ nodeDatum }) => {
       />
       <path
         d="M203 112a90 90 0 11-180 0 90 90 0 01180 0z"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
         stroke={nodeDatum.children.length > 0 ? "#e3b306" : "#fff"}
-        stroke-dasharray="4.9310344,4.9310344"
-        stroke-width="6.201440000000001"
+        strokeDasharray="4.9310344,4.9310344"
+        strokeWidth="6.201440000000001"
       />
       <path
         d="M197 112a84 84 0 11-168 0 84 84 0 01168 0z"
-        stroke-linejoin="round"
+        strokeLinejoin="round"
         stroke={nodeDatum.children.length > 0 ? "#e3b306" : "#fff"}
-        stroke-width="2.61382"
+        strokeWidth="2.61382"
       />
       <path
         d="M190 112a77 77 0 11-154 0 77 77 0 01154 0z"
-        stroke-linejoin="round"
-        stroke-dasharray="1.14678731,1.14678731"
-        stroke-width="5.014"
+        strokeLinejoin="round"
+        strokeDasharray="1.14678731,1.14678731"
+        strokeWidth="5.014"
         fill={nodeDatum.children.length > 0 ? "#e3b306" : "#fff"}
         stroke={nodeDatum.children.length > 0 ? "#e3b306" : "#fff"}
       />

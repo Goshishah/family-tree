@@ -28,8 +28,8 @@ import { routesPath } from "../../routes/routesConfig";
 import avatar from "../../content/imgs/avatar.png";
 import languages from "../../data/languages.json";
 import { toggleLangAction } from "../../redux/generalReducer";
-import "./app-header.scss";
 import DownloadAs from "../DownloadAs/DownloadAs";
+import "./app-header.scss";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
