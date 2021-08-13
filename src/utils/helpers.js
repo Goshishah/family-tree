@@ -1,3 +1,5 @@
+import { ROLES } from "./constants";
+
 export const getApiUrl = (endpoint) => {
   let apiBaseURL = "https://syed-family-tree-backend.herokuapp.com";
   if (
@@ -8,3 +10,5 @@ export const getApiUrl = (endpoint) => {
   }
   return `${apiBaseURL}/api/${endpoint}`;
 };
+
+export const isSuperAdmin = (role) => role === ROLES.SUPER_ADMIN;

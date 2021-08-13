@@ -27,9 +27,13 @@ import storageService from "../../services/storageService";
 import { routesPath } from "../../routes/routesConfig";
 import avatar from "../../content/imgs/avatar.png";
 import languages from "../../data/languages.json";
-import { toggleLangAction } from "../../redux/generalReducer";
+import {
+  toggleLangAction,
+  toggleReadOnlyAction,
+} from "../../redux/generalReducer";
 import DownloadAs from "../DownloadAs/DownloadAs";
 import "./app-header.scss";
+import PadLock from "../PadLock/PadLock";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
@@ -125,6 +129,7 @@ const UnauthenticatedHeader = ({ treeRef }) => {
 };
 
 const AuthenticatedHeader = ({ username, treeRef, onTreeJsonDownload }) => {
+  const { readOnly } = useSelector((state) => state.general);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const history = useHistory();
   const dispatch = useDispatch();
@@ -171,6 +176,10 @@ const AuthenticatedHeader = ({ username, treeRef, onTreeJsonDownload }) => {
           </HStack>
           <Bismillah />
           <Flex alignItems={"center"}>
+            <PadLock
+              locked={readOnly}
+              onClick={(locked) => dispatch(toggleReadOnlyAction(locked))}
+            />
             <LangSelect />
             <Menu>
               <Button

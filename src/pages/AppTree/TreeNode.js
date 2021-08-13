@@ -2,10 +2,16 @@ import React, { useEffect, useRef } from "react";
 import { findDOMNode } from "react-dom";
 import { useSelector } from "react-redux";
 import * as d3 from "d3";
+import "./tree-node.scss";
+import { isSuperAdmin } from "../../utils/helpers";
 
 const SVGText = (props) => {
+  const { role } = useSelector((state) => state.user);
+  const { readOnly } = useSelector((state) => state.general);
+
+  const { x, y, ...rest } = props;
   const textRef = useRef(null);
-  const makeDraggable = () => {
+  const makeDraggable = (readOnly) => {
     let translateX = props.x;
     let translateY = props.y;
     const handleDrag = d3
@@ -14,6 +20,7 @@ const SVGText = (props) => {
         return { x: translateX, y: translateY };
       })
       .on("drag", function (event) {
+        if (readOnly && isSuperAdmin(role)) return;
         const me = d3.select(textRef.current);
         const transform = `translate(${event.x}, ${event.y})`;
         translateX = event.x;
@@ -26,12 +33,18 @@ const SVGText = (props) => {
   };
 
   useEffect(() => {
-    makeDraggable(props.x, props.y);
-  }, []);
+    // if (!readOnly && isSuperAdmin(role)) {
+    makeDraggable(readOnly);
+    // }
+  }, [readOnly]);
 
-  const { x, y, ...rest } = props;
   return (
-    <text ref={textRef} transform={`translate(${x}, ${y})`} {...rest}>
+    <text
+      ref={textRef}
+      transform={`translate(${x}, ${y})`}
+      {...rest}
+      className={!readOnly && isSuperAdmin(role) ? "highlighter" : ""}
+    >
       {props.children}
     </text>
   );
@@ -39,7 +52,6 @@ const SVGText = (props) => {
 
 const TreeNode = ({ nodeDatum }) => {
   const { selectedLang } = useSelector((state) => state.general);
-
   const getTreeNode = () => {
     return nodeDatum.languages[selectedLang]
       ? nodeDatum.languages[selectedLang]
@@ -54,7 +66,6 @@ const TreeNode = ({ nodeDatum }) => {
 
   const getNameParts = () => {
     return Object.keys(getTreeNode()).map((item) => {
-      console.log("getNameParts", item);
       return (
         <SVGText
           key={item.title}

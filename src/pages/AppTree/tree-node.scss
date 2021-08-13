@@ -1,0 +1,11 @@
+.rd3t-node {
+  .highlighter:hover {
+    fill: blue;
+  }
+
+  .edit-icon {
+    &:hover {
+      fill: green;
+    }
+  }
+}
