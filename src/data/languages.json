@@ -1,5 +1,1 @@
-[
-  { "code": "ar", "name": "Arabic" },
-  { "code": "en", "name": "English" },
-  { "code": "ur", "name": "Urdu" }
-]
+[{ "code": "ur", "name": "Urdu" }]

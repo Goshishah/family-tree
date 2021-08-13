@@ -20,15 +20,17 @@ import {
 import languages from "../../data/languages.json";
 
 const FormInput = ({ keyName, selectedNode, setSelectedNode }) => {
+  const getValue = () => {
+    return selectedNode &&
+      selectedNode.languages &&
+      selectedNode.languages[selectedNode.languageCode] &&
+      selectedNode.languages[selectedNode.languageCode][keyName]
+      ? selectedNode.languages[selectedNode.languageCode][keyName].title
+      : "";
+  };
   return (
     <Input
-      value={
-        selectedNode &&
-        selectedNode.languages &&
-        selectedNode.languages[selectedNode.languageCode]
-          ? selectedNode.languages[selectedNode.languageCode][keyName]
-          : ""
-      }
+      value={getValue()}
       onChange={(event) => {
         setSelectedNode({
           ...selectedNode,
@@ -47,7 +49,10 @@ const FormInput = ({ keyName, selectedNode, setSelectedNode }) => {
 
 const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
   const [selectedNode, setSelectedNode] = useState(undefined);
-  const [child, setChild] = useState({ middlename: "", languageCode: "ur" });
+  const [child, setChild] = useState({
+    middlename: { title: "" },
+    languageCode: "ur",
+  });
 
   useEffect(() => {
     setSelectedNode(node);
@@ -173,7 +178,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
               <FormControl>
                 <FormLabel>Surname</FormLabel>
                 <Input
-                  value={child.surname}
+                  value={child.surname ? child.surname.title : ""}
                   onChange={(event) =>
                     setChild({ ...child, surname: event.target.value })
                   }
@@ -182,7 +187,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
               <FormControl>
                 <FormLabel>Firstname</FormLabel>
                 <Input
-                  value={child.firstname}
+                  value={child.firstname ? child.firstname.title : ""}
                   onChange={(event) =>
                     setChild({ ...child, firstname: event.target.value })
                   }
@@ -191,7 +196,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
               <FormControl>
                 <FormLabel>Middlename</FormLabel>
                 <Input
-                  value={child.middlename}
+                  value={child.middlename ? child.middlename.title : ""}
                   onChange={(event) =>
                     setChild({ ...child, middlename: event.target.value })
                   }
@@ -200,7 +205,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
               <FormControl>
                 <FormLabel>Lastname</FormLabel>
                 <Input
-                  value={child.lastname}
+                  value={child.lastname ? child.lastname.title : ""}
                   onChange={(event) =>
                     setChild({ ...child, lastname: event.target.value })
                   }
@@ -209,7 +214,7 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
               <FormControl>
                 <FormLabel>Laqab</FormLabel>
                 <Input
-                  value={child.laqab}
+                  value={child.laqab ? child.laqab.title : ""}
                   onChange={(event) =>
                     setChild({ ...child, laqab: event.target.value })
                   }
@@ -247,7 +252,10 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
             onClick={() => {
               console.log("child", child);
               onSubmit(selectedNode, child);
-              setChild({ name: "" });
+              setChild({
+                middlename: { title: "" },
+                languageCode: "ur",
+              });
             }}
             disabled={
               selectedNode &&

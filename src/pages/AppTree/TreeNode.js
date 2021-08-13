@@ -1,124 +1,67 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { findDOMNode } from "react-dom";
 import { useSelector } from "react-redux";
 import * as d3 from "d3";
 
-class SVGText extends React.Component {
-  makeDraggable(comp) {
-    let translateX = 0;
-    let translateY = 0;
+const SVGText = (props) => {
+  const textRef = useRef(null);
+  const makeDraggable = () => {
+    let translateX = props.x;
+    let translateY = props.y;
     const handleDrag = d3
       .drag()
       .subject(function () {
         return { x: translateX, y: translateY };
       })
       .on("drag", function (event) {
-        const me = d3.select(this);
+        const me = d3.select(textRef.current);
         const transform = `translate(${event.x}, ${event.y})`;
         translateX = event.x;
         translateY = event.y;
         me.attr("transform", transform);
       });
-    const node = findDOMNode(comp);
+
+    const node = findDOMNode(textRef.current);
     handleDrag(d3.select(node));
-  }
+  };
 
-  componentDidMount() {
-    this.makeDraggable(this);
-  }
+  useEffect(() => {
+    makeDraggable(props.x, props.y);
+  }, []);
 
-  render() {
-    return <text {...this.props}>{this.props.children}</text>;
-  }
-}
+  const { x, y, ...rest } = props;
+  return (
+    <text ref={textRef} transform={`translate(${x}, ${y})`} {...rest}>
+      {props.children}
+    </text>
+  );
+};
 
 const TreeNode = ({ nodeDatum }) => {
   const { selectedLang } = useSelector((state) => state.general);
 
-  const getNodeStyleConfis = (key) => {
-    const fontStyle = {
-      surname: {
-        ur: {
-          x: "100",
-          y: "65",
-          fontSize: "30",
-        },
-        ar: {
-          x: "50",
-          y: "32",
-          fontSize: "15",
-        },
-      },
-      firstname: {
-        ur: {
-          x: "140",
-          y: "100",
-          fontSize: "20",
-        },
-        ar: {
-          x: "75",
-          y: "45",
-          fontSize: "15",
-        },
-      },
-      middlename: {
-        ur: {
-          x: "75",
-          y: "145",
-          fontSize: "75",
-        },
-        ar: {
-          x: "25",
-          y: "70",
-          fontSize: "30",
-        },
-      },
-      lastname: {
-        ur: {
-          x: "40",
-          y: "130",
-          fontSize: "35",
-        },
-        ar: {
-          x: "25",
-          y: "60",
-          fontSize: "40",
-        },
-      },
-      laqab: {
-        ur: {
-          x: "60",
-          y: "80",
-          fontSize: "15",
-        },
-        ar: {
-          x: "15",
-          y: "45",
-          fontSize: "15",
-        },
-      },
-    };
-
-    return fontStyle[key][selectedLang];
-  };
-
-  const getFullName = () => {
+  const getTreeNode = () => {
     return nodeDatum.languages[selectedLang]
       ? nodeDatum.languages[selectedLang]
       : {
-          surname: "",
-          firstname: "",
-          middlename: "",
-          lastname: "",
-          laqab: "",
+          surname: { title: "" },
+          firstname: { title: "" },
+          middlename: { title: "" },
+          lastname: { title: "" },
+          laqab: { title: "" },
         };
   };
 
   const getNameParts = () => {
-    return Object.keys(getFullName()).map((item) => {
+    return Object.keys(getTreeNode()).map((item) => {
+      console.log("getNameParts", item);
       return (
-        <SVGText key={item} className={item} {...getNodeStyleConfis(item)}>
-          {getFullName()[item]}
+        <SVGText
+          key={item.title}
+          className={item.title}
+          {...getTreeNode()[item]}
+        >
+          {getTreeNode()[item].title}
         </SVGText>
       );
     });

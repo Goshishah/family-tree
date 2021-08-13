@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Tree from "react-d3-tree";
 import NodeModal from "./NodeModal";
 import { useCenteredTree } from "../../helpers";
@@ -11,13 +12,16 @@ import TreeNode from "./TreeNode";
 import AppHeader from "../../components/AppHeader/AppHeader";
 import AppLoader from "../../components/AppLoader/AppLoader";
 import "./app-tree.scss";
+import { setTreeAction } from "../../redux/treeReducer";
 
 const AppTree = ({ readOnly = true }) => {
-  const [tree, setTree] = useState(null);
+  const tree = useSelector((state) => state.tree);
   const treeRef = useRef(null);
   const [translate, containerRef] = useCenteredTree();
   const [node, setNode] = useState();
   const [orientation, setOrientation] = useState("vertical");
+
+  const dispatch = useDispatch();
 
   const handleClose = () => setNode(undefined);
   const handleNodeClick = (datum) => {
@@ -28,7 +32,7 @@ const AppTree = ({ readOnly = true }) => {
     getTreeApi().then((response) => {
       const { success, data } = response;
       if (success) {
-        setTree(data);
+        dispatch(setTreeAction(data));
       }
     });
   }, []);
@@ -65,7 +69,7 @@ const AppTree = ({ readOnly = true }) => {
     postTreeApi({ node, child }).then((response) => {
       const { success, data } = response;
       if (success) {
-        setTree(data);
+        dispatch(setTreeAction(data));
       }
     });
     setNode(undefined);
@@ -75,7 +79,7 @@ const AppTree = ({ readOnly = true }) => {
     deleteTreeApi({ node }).then((response) => {
       const { success, data } = response;
       if (success) {
-        setTree(data);
+        dispatch(setTreeAction(data));
         setNode(undefined);
       } else {
         setNode(undefined);
@@ -127,7 +131,7 @@ const AppTree = ({ readOnly = true }) => {
       ) : (
         <AppLoader />
       )}
-      {!readOnly && (
+      {tree && !readOnly && (
         <NodeModal
           node={node}
           isOpen={!!node}
