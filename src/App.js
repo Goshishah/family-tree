@@ -36,7 +36,7 @@ export default function App() {
         console.log(error);
         setLoading(false);
       });
-    const locale = storageService.getItem("locale");
+    const locale = storageService.getItem("locale") || selectedLang;
     dispatch(toggleLangAction(locale));
   }, [dispatch]);
 

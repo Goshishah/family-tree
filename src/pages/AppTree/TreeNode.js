@@ -1,16 +1,39 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { findDOMNode } from "react-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as d3 from "d3";
 import "./tree-node.scss";
 import { isSuperAdmin } from "../../utils/helpers";
+import { updateNodeTextAction } from "../../redux/treeReducer";
 
 const SVGText = (props) => {
   const { role } = useSelector((state) => state.user);
   const { readOnly } = useSelector((state) => state.general);
 
-  const { x, y, ...rest } = props;
+  const { id, x, y, nodeDatum, item, selectedLang, ...rest } = props;
   const textRef = useRef(null);
+
+  const dispatch = useDispatch();
+  const setNodeValue = (translateX, translateY) => {
+    console.log("setNodeValue", nodeDatum);
+    dispatch(
+      updateNodeTextAction({
+        ...nodeDatum,
+        languages: {
+          ...nodeDatum.languages,
+          [selectedLang]: {
+            ...nodeDatum.languages[selectedLang],
+            [item]: {
+              ...nodeDatum.languages[selectedLang][item],
+              x: translateX,
+              y: translateY,
+            },
+          },
+        },
+      })
+    );
+  };
+
   const makeDraggable = (readOnly) => {
     let translateX = props.x;
     let translateY = props.y;
@@ -20,12 +43,14 @@ const SVGText = (props) => {
         return { x: translateX, y: translateY };
       })
       .on("drag", function (event) {
-        if (readOnly && isSuperAdmin(role)) return;
-        const me = d3.select(textRef.current);
-        const transform = `translate(${event.x}, ${event.y})`;
-        translateX = event.x;
-        translateY = event.y;
-        me.attr("transform", transform);
+        if (isSuperAdmin(role) && !readOnly) {
+          const me = d3.select(textRef.current);
+          const transform = `translate(${event.x}, ${event.y})`;
+          translateX = event.x;
+          translateY = event.y;
+          setNodeValue(translateX, translateY);
+          me.attr("transform", transform);
+        }
       });
 
     const node = findDOMNode(textRef.current);
@@ -33,10 +58,8 @@ const SVGText = (props) => {
   };
 
   useEffect(() => {
-    // if (!readOnly && isSuperAdmin(role)) {
     makeDraggable(readOnly);
-    // }
-  }, [readOnly]);
+  }, [readOnly, nodeDatum]);
 
   return (
     <text
@@ -68,8 +91,11 @@ const TreeNode = ({ nodeDatum }) => {
     return Object.keys(getTreeNode()).map((item) => {
       return (
         <SVGText
-          key={item.title}
-          className={item.title}
+          key={item}
+          id={nodeDatum.attributes.id}
+          selectedLang={selectedLang}
+          item={item}
+          nodeDatum={nodeDatum}
           {...getTreeNode()[item]}
         >
           {getTreeNode()[item].title}

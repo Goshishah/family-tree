@@ -62,7 +62,6 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
     setChild({ ...child, gender: target.value });
   };
 
-  console.log("selected node...........", selectedNode);
   return (
     <Modal isOpen={isOpen} size="full" onClose={onClose}>
       <ModalOverlay />
@@ -251,11 +250,13 @@ const NodeModal = ({ isOpen, node, onClose, onSubmit, onDelete }) => {
             variant="solid"
             onClick={() => {
               console.log("child", child);
+              // return;
               onSubmit(selectedNode, child);
-              setChild({
-                middlename: { title: "" },
-                languageCode: "ur",
-              });
+              onClose();
+              // setChild({
+              //   middlename: { title: "" },
+              //   languageCode: "ur",
+              // });
             }}
             disabled={
               selectedNode &&

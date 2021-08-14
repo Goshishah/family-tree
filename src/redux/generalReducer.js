@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  selectedLang: "",
+  selectedLang: "ur",
   readOnly: true,
 };
 
