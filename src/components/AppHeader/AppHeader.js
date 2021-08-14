@@ -34,6 +34,7 @@ import {
 import DownloadAs from "../DownloadAs/DownloadAs";
 import "./app-header.scss";
 import PadLock from "../PadLock/PadLock";
+import SaveTree from "../SaveTree/SaveTree";
 
 const Links = ["Dashboard", "Projects", "Team"];
 
@@ -176,6 +177,7 @@ const AuthenticatedHeader = ({ username, treeRef, onTreeJsonDownload }) => {
           </HStack>
           <Bismillah />
           <Flex alignItems={"center"}>
+            <SaveTree />
             <PadLock
               locked={readOnly}
               onClick={(locked) => dispatch(toggleReadOnlyAction(locked))}

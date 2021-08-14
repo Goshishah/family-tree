@@ -8,30 +8,60 @@ import { updateNodeTextAction } from "../../redux/treeReducer";
 
 const SVGText = (props) => {
   const { role } = useSelector((state) => state.user);
+  const tree = useSelector((state) => state.tree);
   const { readOnly } = useSelector((state) => state.general);
 
   const { id, x, y, nodeDatum, item, selectedLang, ...rest } = props;
   const textRef = useRef(null);
 
   const dispatch = useDispatch();
-  const setNodeValue = (translateX, translateY) => {
-    console.log("setNodeValue", nodeDatum);
-    dispatch(
-      updateNodeTextAction({
-        ...nodeDatum,
-        languages: {
-          ...nodeDatum.languages,
-          [selectedLang]: {
-            ...nodeDatum.languages[selectedLang],
-            [item]: {
-              ...nodeDatum.languages[selectedLang][item],
-              x: translateX,
-              y: translateY,
-            },
+  const searchNode = (tree, value, key = "id", reverse = false) => {
+    const stack = [tree];
+    while (stack.length) {
+      const node = stack[reverse ? "pop" : "shift"]();
+      if (node["attributes"][key] === value) return node;
+      node.children && stack.push(...node.children);
+    }
+    return null;
+  };
+
+  const updateSearchNode = (searchedNode, translateX, translateY) => {
+    return {
+      ...searchedNode,
+      languages: {
+        ...searchedNode.languages,
+        [selectedLang]: {
+          ...searchedNode.languages[selectedLang],
+          [item]: {
+            ...searchedNode.languages[selectedLang][item],
+            x: translateX,
+            y: translateY,
           },
         },
-      })
-    );
+      },
+    };
+  };
+
+  const updateTree = (data, id, value) => {
+    if (data["attributes"].id == id) {
+      data = value;
+    }
+    if (data.children !== undefined && data.children.length > 0) {
+      for (let i = 0; i < data.children.length; i++) {
+        data.children[i] = updateTree(data.children[i], id, value);
+      }
+    }
+    return data;
+  };
+
+  const setNodeValue = (translateX, translateY) => {
+    console.log("setNodeValue", nodeDatum);
+    const searchedNode = searchNode(tree, nodeDatum.attributes.id);
+    const updatedNode = updateSearchNode(searchedNode, translateX, translateY);
+    const updatedTree = updateTree(tree, nodeDatum.attributes.id, updatedNode);
+
+    console.log("searchedNode....", tree, updatedTree);
+    dispatch(updateNodeTextAction(updatedTree));
   };
 
   const makeDraggable = (readOnly) => {
