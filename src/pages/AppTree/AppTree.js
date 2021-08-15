@@ -81,7 +81,6 @@ const AppTree = () => {
   // Here we're using `renderCustomNodeElement` to represent each node
   // as an SVG `rect` instead of the default `circle`.
   const renderRectSvgNode = (customProps, onNodeClick) => {
-    console.log("renderRectSvgNode", customProps);
     return (
       <g onClick={customProps.toggleNode}>
         <EditNode
@@ -134,7 +133,6 @@ const AppTree = () => {
     }
   };
 
-  console.log("tree......", tree);
   return (
     <div className="app-tree" ref={containerRef}>
       <AppHeader onTreeJsonDownload={downloadFile} treeRef={treeRef} />

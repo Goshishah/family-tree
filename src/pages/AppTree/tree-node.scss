@@ -8,4 +8,18 @@
       fill: green;
     }
   }
+
+  .font-change {
+    display: none;
+  }
+
+  .word-group:hover {
+    .font-change {
+      display: block;
+    }
+  }
+
+  // .highlighter:hover + .font-change {
+  //   display: block;
+  // }
 }

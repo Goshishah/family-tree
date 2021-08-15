@@ -25,7 +25,7 @@ const SVGText = (props) => {
     return null;
   };
 
-  const updateSearchNode = (searchedNode, translateX, translateY) => {
+  const updateSearchNode = (searchedNode, x, y, fontSize) => {
     return {
       ...searchedNode,
       languages: {
@@ -34,8 +34,9 @@ const SVGText = (props) => {
           ...searchedNode.languages[selectedLang],
           [item]: {
             ...searchedNode.languages[selectedLang][item],
-            x: translateX,
-            y: translateY,
+            x,
+            y,
+            fontSize,
           },
         },
       },
@@ -54,13 +55,15 @@ const SVGText = (props) => {
     return data;
   };
 
-  const setNodeValue = (translateX, translateY) => {
-    console.log("setNodeValue", nodeDatum);
+  const setNodeValue = (translateX, translateY, fontSize) => {
     const searchedNode = searchNode(tree, nodeDatum.attributes.id);
-    const updatedNode = updateSearchNode(searchedNode, translateX, translateY);
+    const updatedNode = updateSearchNode(
+      searchedNode,
+      translateX,
+      translateY,
+      fontSize
+    );
     const updatedTree = updateTree(tree, nodeDatum.attributes.id, updatedNode);
-
-    console.log("searchedNode....", tree, updatedTree);
     dispatch(updateNodeTextAction(updatedTree));
   };
 
@@ -75,10 +78,11 @@ const SVGText = (props) => {
       .on("drag", function (event) {
         if (isSuperAdmin(role) && !readOnly) {
           const me = d3.select(textRef.current);
+          console.log(me);
           const transform = `translate(${event.x}, ${event.y})`;
           translateX = event.x;
           translateY = event.y;
-          setNodeValue(translateX, translateY);
+          setNodeValue(translateX, translateY, props.fontSize);
           me.attr("transform", transform);
         }
       });
@@ -91,15 +95,32 @@ const SVGText = (props) => {
     makeDraggable(readOnly);
   }, [readOnly, nodeDatum]);
 
+  const handleFountChange = ({ target }) => {
+    const { value } = target;
+    setNodeValue(props.x, props.y, value);
+  };
   return (
-    <text
-      ref={textRef}
-      transform={`translate(${x}, ${y})`}
-      {...rest}
-      className={!readOnly && isSuperAdmin(role) ? "highlighter" : ""}
-    >
-      {props.children}
-    </text>
+    <g ref={textRef} className="word-group" transform={`translate(${x}, ${y})`}>
+      <>
+        <text
+          ref={textRef}
+          {...rest}
+          className={!readOnly && isSuperAdmin(role) ? "highlighter" : ""}
+        >
+          {props.children}
+        </text>
+        <foreignObject className="font-change" width="25" height="25">
+          <input
+            type="text"
+            transform={`translate(${x}, ${y})`}
+            value={rest.fontSize}
+            maxLength="50"
+            min="1"
+            onChange={handleFountChange}
+          />
+        </foreignObject>
+      </>
+    </g>
   );
 };
 

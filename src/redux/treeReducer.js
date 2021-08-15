@@ -9,7 +9,6 @@ const treeReducer = (state = INITIAL_STATE, action) => {
     case TYPE_SET_TREE:
       return { ...state, ...action.payload };
     case TYPE_UPDATE_NODE_TEXT:
-      console.log("state......", state, action.payload);
       return { ...state, ...action.payload };
     default:
       return state;

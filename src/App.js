@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import Routes from "./routes/Routes";
 import AppLoader from "./components/AppLoader/AppLoader";
 import { verifyService } from "./services/authService";
@@ -42,7 +42,12 @@ export default function App() {
 
   if (loading) return <AppLoader />;
   return (
-    <ChakraProvider>
+    <ChakraProvider
+      theme={extendTheme({
+        initialColorMode: "light",
+        useSystemColorMode: false,
+      })}
+    >
       <Routes />
     </ChakraProvider>
   );
